@@ -25,4 +25,13 @@ getReply = (option_key = '', callback) => connection.query(
     callback(value)
 });
 
-module.exports = {getData, getReply}
+getDataDB = (message = '', callback) => connection.query(
+    `SELECT * FROM ${DATABASE_NAME}.mensajes WHERE  mensajes.mensaje LIKE '%${message}%'`,
+    (error, results
+        ) => {
+    const [response] = results
+    const key = response?.mensaje || null
+    callback(results)
+});
+
+module.exports = {getData, getReply, getDataDB}

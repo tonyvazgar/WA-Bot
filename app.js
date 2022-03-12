@@ -11,12 +11,13 @@ const { middlewareClient } = require('./middleware/client')
 const { generateImage } = require('./controllers/handle')
 const { connectionReady, connectionLost } = require('./controllers/connection')
 const { saveMedia } = require('./controllers/save')
-const { getMessages, responseMessages, bothResponse } = require('./controllers/flows')
-const { sendMedia, sendMessage, lastTrigger } = require('./controllers/send')
+const { getMessages, responseMessages, bothResponse, getMessagesBDD } = require('./controllers/flows')
+const { sendMedia, sendMessage, lastTrigger, reply } = require('./controllers/send')
 
-const {quitarAcentos, quitarPuntuacion, limpiarTexto} = require('./pruebas/texto')
+const {quitarAcentos, quitarPuntuacion, limpiarTexto, waitFor} = require('./pruebas/texto')
 const exportUsersToExcel = require('./pruebas/exportService');
 const importUsersToExcel = require('./pruebas/importService');
+const {procesarText, query} = require('./pruebas');
 
 const app = express();
 app.use(express.json())
@@ -32,48 +33,48 @@ var sessionData;
  */
 const listenMessage = () => client.on('message', async msg => {
 
-    const palabras = ['hola', 'articulo', 'tratamiento', 'lugar', 'editada', 'libre', 'proskin', 'depilacion', 'tratamiento', 'zeebo', 'walker', 'bot', 'envia', 'ok'];
-
-    const leido = importUsersToExcel('platica.csv');
-    const { from, body, hasMedia,  timestamp} = msg;
-    console.log(msg);
+    let { from, body, hasMedia,  timestamp, author} = msg; 
+    // console.log(msg);
     // Este bug lo reporto Lucas Aldeco Brescia para evitar que se publiquen estados
     if(from === 'status@broadcast'){
         return 
     }
+    let aGuardarDesdeGrupo = '';
+    if(author == undefined){ 
+        aGuardarDesdeGrupo = from;
+    }else{
+        aGuardarDesdeGrupo = author;
+    }
     message = body.toLowerCase(); 
 
-    let cleaned_message = limpiarTexto(message);
+    let existio = procesarText(message, timestamp, aGuardarDesdeGrupo, mysqlConnection.connection);
 
-    if(palabras.some(substring=>cleaned_message.includes(substring))) {
-        console.log("*******" + cleaned_message.toUpperCase());
-        palabras.forEach(palabra => {
-            cleaned_message = cleaned_message.replaceAll(palabra, "*" + palabra.toUpperCase() + "*");
-        });
-        let message_to_save = [
-            ...leido,
-            {
-                timestamp: timestamp,
-                num: from,
-                message: cleaned_message
-            }
-        ];
-        // message_to_save = message_to_save.concat(leido);
-        const workSheetColumnNames = [
-            "timestamp",
-            "num",
-            "message"
-        ];
-        const workSheetName = "Prueba";
-        const filePath = 'platica.csv';
-        exportUsersToExcel(message_to_save, workSheetColumnNames, workSheetName, filePath);
-        fs.appendFile('platica.txt', "[" + timestamp + "]" + from + ": " +cleaned_message + "\r\n", function (err) {
-            if (err) return console.log(err);
-            console.log('successfully appended "' + cleaned_message.toUpperCase() + "\r\n" + '"');
-        });
+    
+    console.log(existio);
 
-        await sendMessage(client, from, "Enterado!");        //Solo funciona en conversaciones personales, en grupos NO
+    
+
+    if(existio) {
+        // console.log(mysqlConnection.connection);
+        let ejemplo;
+
+        const step = await getMessagesBDD("HOLA");
+        console.log(step);
+        
+        for (const element of step) {
+            await sendMessage(client, from, JSON.stringify(element.mensaje));
+        }
+        
+        await reply(client, from, msg);        //Solo funciona en conversaciones personales, en grupos NO
+        await waitFor(2000);
+        //FUNCION PARA ENVIAR TODO POR PRIVADO, ENVIANDO POR PARAMETROS EL TEXTO DEL MENSAJE Y LA FUNCION ENVIARA  LO DEL LA BDD
+        await sendMessage(client, from, "Guardado con éxito"); 
+    }else {
+        // await sendMessage(client, from, "EJEMLO DE MENSAJE NEGATIVO");
     }
+
+
+
     /**
      * Guardamos el archivo multimedia que envia
      */
@@ -193,11 +194,11 @@ const withOutSession = () => {
 
     client.on('authenticated', (session) => {
         sessionData = session;
-        fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
-            if (err) {
-                console.log(`Ocurrio un error con el archivo: `, err);
-            }
-        });
+        // fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
+        //     if (err) {
+        //         console.log(`Ocurrio un error con el archivo: `, err);
+        //     }
+        // });
     });
 
     client.initialize();

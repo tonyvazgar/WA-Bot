@@ -1,8 +1,13 @@
-const {get, reply, getIA} = require('../adapter')
+const {get, reply, getIA, getMensajeBDD} = require('../adapter')
 const {saveExternalFile} = require('./handle')
 
 const getMessages = async (message) => {
     const data = await get(message)
+    return data
+}
+
+const getMessagesBDD = async (message) => {
+    const data = await getMensajeBDD(message)
     return data
 }
 
@@ -25,4 +30,4 @@ const bothResponse = async (message) => {
 }
 
 
-module.exports = { getMessages, responseMessages, bothResponse }
+module.exports = { getMessages, responseMessages, bothResponse, getMessagesBDD }

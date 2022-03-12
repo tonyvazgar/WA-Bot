@@ -33,6 +33,18 @@ const sendMessage = async (client, number = null, text = null, trigger = null) =
 }
 
 /**
+ * Respondemos el mensaje a nuestro cliente
+ * @param {*} number 
+ */
+ const reply = async (client, number = null, text = null, trigger = null) => {
+    // number = cleanNumber(number)
+    const message = text
+    message.reply('Entendido');
+    // await readChat(number, message, trigger)
+    console.log(`⚡⚡⚡ Enviando mensajes a {` + number + `}....`);
+}
+
+/**
  * Opte
  */
 const lastTrigger = (number) => new Promise((resolve, reject) => {
@@ -102,4 +114,4 @@ const readChat = async (number, message, trigger = null) => {
     }
 }
 
-module.exports = { sendMessage, sendMedia, lastTrigger }
+module.exports = { sendMessage, sendMedia, lastTrigger, reply }

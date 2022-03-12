@@ -19,4 +19,8 @@ const limpiarTexto = (cadena) => {
     return texto_limpio.toLowerCase();
 }
 
-module.exports = {quitarAcentos, quitarPuntuacion, limpiarTexto}
+const waitFor = ms => new Promise(
+    resolve => setTimeout(resolve, ms)
+)
+
+module.exports = {quitarAcentos, quitarPuntuacion, limpiarTexto, waitFor}

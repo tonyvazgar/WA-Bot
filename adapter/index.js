@@ -1,4 +1,4 @@
-const { getData, getReply } = require('./mysql')
+const { getData, getReply, getDataDB } = require('./mysql')
 const { getDataIa } = require('./diaglogflow')
 const  stepsInitial = require('../flow/initial.json')
 const  stepsReponse = require('../flow/response.json')
@@ -65,4 +65,10 @@ const getIA = (message) => new Promise((resolve, reject) => {
     }
 })
 
-module.exports = { get, reply, getIA }
+const getMensajeBDD = (message) => new Promise((resolve, reject) => {
+    getDataDB(message, (dt) => {
+        resolve(dt)
+    });
+})
+
+module.exports = { get, reply, getIA, getMensajeBDD }
