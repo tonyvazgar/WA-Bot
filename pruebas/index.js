@@ -6,16 +6,19 @@ const mysqlConnection = require('../config/mysql');
 
 const procesarText = (texto, timestamp, aGuardarDesdeGrupo) => {
 
-    const palabras_clave = ['hola', 'articulo', 'dia', 'ejemplo', 'proyecto', 'libre', 'proskin', 'bot', 'envia', 'ok', 'vamos', 'ofrezco', 'rento', 'vendo', 'zona', 'tarde'];
+    const palabras_clave = ['hola', 'articulo', 'dia', 'ejemplo', 'proyecto', 'libre', 'proskin', 'bot', 'envia', 'ok', 'vamos', 'ofrezco', 'rento', 'vendo', 'zona', 'tarde', 'busco', 'renta', 'lugar'];
 
     const archivo_leido = importUsersToExcel('platica.csv');
-
+  
     let texto_limpio = limpiarTexto(texto);
     
-    let ejemplo;
+    let ejemplo = [];
 
     if (palabras_clave.some(substring => texto_limpio.includes(substring))) {
         palabras_clave.forEach(palabra => {
+            if(texto_limpio.includes(palabra)){
+                ejemplo.push(palabra);
+            }
             texto_limpio = texto_limpio.replaceAll(palabra, "*" + palabra.toUpperCase() + "*");
         });
         let message_to_save = [
@@ -41,9 +44,9 @@ const procesarText = (texto, timestamp, aGuardarDesdeGrupo) => {
         });
 
 
-        return true;
+        return {encontrado: 1, palabras: ejemplo};
     }
-    return false;
+    return {encontrado: 0, palabras: ejemplo};
 }
 
 function query(connection, palabra, callback) {

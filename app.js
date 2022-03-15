@@ -5,7 +5,7 @@ require('dotenv').config()
 const fs = require('fs');
 const express = require('express');
 const qrcode = require('qrcode-terminal');
-const { Client } = require('whatsapp-web.js');
+const { Client, LocalAuth } = require('whatsapp-web.js');
 const mysqlConnection = require('./config/mysql')
 const { middlewareClient } = require('./middleware/client')
 const { generateImage } = require('./controllers/handle')
@@ -54,15 +54,16 @@ const listenMessage = () => client.on('message', async msg => {
 
     
 
-    if(existio) {
+    if(existio.encontrado == 1) {
         // console.log(mysqlConnection.connection);
         let ejemplo;
 
-        const step = await getMessagesBDD("HOLA");
-        console.log(step);
-        
-        for (const element of step) {
-            await sendMessage(client, from, JSON.stringify(element.mensaje));
+        for(const palabra_encontrada of existio.palabras){
+            const step = await getMessagesBDD(palabra_encontrada);
+            // console.log(step);
+            for (const element of step) {
+                await sendMessage(client, from, JSON.stringify(element.mensaje));
+            }
         }
         
         await reply(client, from, msg);        //Solo funciona en conversaciones personales, en grupos NO
@@ -169,14 +170,22 @@ const withSession = () => {
  * Generamos un QRCODE para iniciar sesion
  */
 const withOutSession = () => {
-    console.log('No tenemos session guardada');
+    // console.log('No tenemos session guardada');
 
+    // client = new Client({
+    //     puppeteer: {
+    //         args: [
+    //             '--no-sandbox'
+    //         ],
+    //     }
+    // });
     client = new Client({
-        puppeteer: {
-            args: [
-                '--no-sandbox'
-            ],
-        }
+        authStrategy: new LocalAuth(), 
+        puppeteer: { 
+            headless: true, 
+            args: ['--no-sandbox'] 
+        }, 
+        clientId: 'client-one' 
     });
 
     client.on('qr', qr => generateImage(qr, () => {

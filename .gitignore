@@ -8,3 +8,4 @@ media/*
 mediaSend/*
 !mediaSend/.gitkeep
 .env
+.wwebjs_auth

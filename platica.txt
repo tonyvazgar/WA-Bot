@@ -303,3 +303,28 @@ una nota de voz
 [1647119739]5212226772173@c.us: ya *ENVIA* desde la bdd  el valor de las palabras ahorita es "fijo"
 [1647119770]5215529439676@c.us: ya lo guarda *OK* ?
 [1647119931]5212226772173@c.us: si ahora ponemos un *HOLA*
+[1647285869]5212226772173@c.us: *HOLA*
+[1647285936]5212226772173@c.us: *HOLA*
+[1647298864]5212226772173@c.us: *OK* va
+[1647298915]5212226772173@c.us: para ver si *OFREZCO* mis productos
+[1647299251]5212226772173@c.us: el *BOT* esta siendo mejor
+[1647302534]5212226772173@c.us: *OK*
+[1647356973]5212226772173@c.us: *OK* entonces mañana lo subo
+[1647360925]5212226772173@c.us: *HOLA*
+[1647360997]5212226772173@c.us: *OK*
+[1647361019]5212226772173@c.us: *OK* entonces *VAMOS* a ir a *PROSKIN* o no?
+[1647361151]5212226772173@c.us: *OK* entonces *VAMOS* a ir a *PROSKIN* o no?
+[1647361221]5212226772173@c.us: *HOLA*
+[1647361239]5212226772173@c.us: *BOT*
+[1647361246]5212226772173@c.us: *PROSKIN*
+[1647361253]5212226772173@c.us: *VAMOS*
+[1647361269]5212226772173@c.us: *OFREZCO*
+[1647361624]5212226772173@c.us: *OFREZCO* casa en lomas de angelopolis
+[1647361643]5212226772173@c.us: *OFREZCO* mi servicio de renta en    
+[1647361736]5212226772173@c.us: *HOLA*! 
+buen *DIA* a todos!
+como les va?
+[1647362114]5212226772173@c.us: *BUSCO* un *LUGAR* de *RENTA* en san juan
+[1647362121]5212226772173@c.us: *OFREZCO* mi servicio de *RENTA* en    
+[1647363076]5212226772173@c.us: buen *DIA*  tienes algo para *RENTA*r?
+[1647363104]5212226772173@c.us: en un *LUGAR* de puebla
