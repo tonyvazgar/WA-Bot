@@ -39,9 +39,9 @@ const sendMessage = async (client, number = null, text = null, trigger = null) =
  const reply = async (client, number = null, text = null, trigger = null) => {
     // number = cleanNumber(number)
     const message = text
-    message.reply('Entendido');
+    message.reply('Trabajando en la petición...');
     // await readChat(number, message, trigger)
-    console.log(`⚡⚡⚡ Enviando mensajes a {` + number + `}....`);
+    console.log(`⚡⚡⚡ Respondiendo mensaje a {` + number + `} en privado...`);
 }
 
 /**

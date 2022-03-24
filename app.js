@@ -11,7 +11,7 @@ const { middlewareClient } = require('./middleware/client')
 const { generateImage } = require('./controllers/handle')
 const { connectionReady, connectionLost } = require('./controllers/connection')
 const { saveMedia } = require('./controllers/save')
-const { getMessages, responseMessages, bothResponse, getMessagesBDD } = require('./controllers/flows')
+const { getMessages, responseMessages, bothResponse, getMessagesBDD, guardarMensaje } = require('./controllers/flows')
 const { sendMedia, sendMessage, lastTrigger, reply } = require('./controllers/send')
 
 const {quitarAcentos, quitarPuntuacion, limpiarTexto, waitFor} = require('./pruebas/texto')
@@ -52,9 +52,7 @@ const listenMessage = () => client.on('message', async msg => {
     
     console.log(existio);
 
-    
-
-    if(existio.encontrado == 1) {
+    if(existio.tipo == 'encontrado') {
         // console.log(mysqlConnection.connection);
         let ejemplo;
 
@@ -62,15 +60,26 @@ const listenMessage = () => client.on('message', async msg => {
             const step = await getMessagesBDD(palabra_encontrada);
             // console.log(step);
             for (const element of step) {
-                await sendMessage(client, from, JSON.stringify(element.mensaje));
+                await sendMessage(client, aGuardarDesdeGrupo, JSON.stringify(element.mensaje));
             }
         }
         
-        await reply(client, from, msg);        //Solo funciona en conversaciones personales, en grupos NO
+        // await reply(client, from, msg);        //Solo funciona en conversaciones personales, en grupos NO
         await waitFor(2000);
-        //FUNCION PARA ENVIAR TODO POR PRIVADO, ENVIANDO POR PARAMETROS EL TEXTO DEL MENSAJE Y LA FUNCION ENVIARA  LO DEL LA BDD
-        await sendMessage(client, from, "Guardado con éxito"); 
-    }else {
+        
+        await sendMessage(client, aGuardarDesdeGrupo, "Busqueda de resultados terminada"); 
+    }
+    if(existio.tipo == 'guardar'){
+
+        await guardarMensaje(timestamp, aGuardarDesdeGrupo, existio.mensaje);
+
+        await sendMessage(client, aGuardarDesdeGrupo, existio.mensaje);
+        await waitFor(2000);
+        await reply(client, from, msg);
+        await sendMessage(client, aGuardarDesdeGrupo, "Mensaje guardado con éxito"); 
+        console.log("Mensaje guardado!")
+    }
+    else {
         // await sendMessage(client, from, "EJEMLO DE MENSAJE NEGATIVO");
     }
 

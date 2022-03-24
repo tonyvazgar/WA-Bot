@@ -34,4 +34,11 @@ getDataDB = (message = '', callback) => connection.query(
     callback(results)
 });
 
-module.exports = {getData, getReply, getDataDB}
+insertData = (timestamp, numero, mensaje, callback) => connection.query (
+    // INSERT INTO `mensajes`(`timestamp`, `numero`, `mensaje`) VALUES ([value-1],[value-2],[value-3])
+    `INSERT INTO ${DATABASE_NAME}.mensajes(timestamp, numero, mensaje)  VALUES ('${timestamp}','${numero}','${mensaje}')`,
+    (error, results) => {
+        callback(results)
+    }
+);
+module.exports = {getData, getReply, getDataDB, insertData}

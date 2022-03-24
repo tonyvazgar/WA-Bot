@@ -1,4 +1,4 @@
-const {get, reply, getIA, getMensajeBDD} = require('../adapter')
+const {get, reply, getIA, getMensajeBDD, insertMensajeEnBDD} = require('../adapter')
 const {saveExternalFile} = require('./handle')
 
 const getMessages = async (message) => {
@@ -8,6 +8,12 @@ const getMessages = async (message) => {
 
 const getMessagesBDD = async (message) => {
     const data = await getMensajeBDD(message)
+    return data
+}
+
+const guardarMensaje = async (timestamp, numero, message) => {
+    console.log("Will be saved: " + timestamp + ", " + numero + ", " + message);
+    const data = await insertMensajeEnBDD(timestamp, numero, message)
     return data
 }
 
@@ -30,4 +36,4 @@ const bothResponse = async (message) => {
 }
 
 
-module.exports = { getMessages, responseMessages, bothResponse, getMessagesBDD }
+module.exports = { getMessages, responseMessages, bothResponse, getMessagesBDD, guardarMensaje }
